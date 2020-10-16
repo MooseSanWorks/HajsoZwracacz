@@ -2,6 +2,7 @@ package com.example.hajsozwracacz;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         mbtCheck = findViewById(R.id.btCheck);
 
         mbtCheck.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
 
@@ -57,15 +61,15 @@ public class MainActivity extends AppCompatActivity {
 
                         mtvZiomek.setText("Każdy ziomek musi Ci oddać po: ");
 
-                        sum = Integer.parseInt(cas) / Integer.parseInt(per);
-                        String sumStr = String.valueOf(sum);
+                        sum = Double.parseDouble(cas) / Double.parseDouble(per);
+                        String sumStr = String.format(Locale.ENGLISH, "%,.2f", sum);
 
                         mtvCashBack.setText(sumStr + " PLN");
 
 
                     } catch (Resources.NotFoundException e) {
                         e.printStackTrace();
-                        Toast.makeText(MainActivity.this, "Error coś się zjebało", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Error coś poszło nie tak", Toast.LENGTH_LONG).show();
                     }
                 }
             }
