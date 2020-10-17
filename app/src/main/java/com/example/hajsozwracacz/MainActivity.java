@@ -3,13 +3,9 @@ package com.example.hajsozwracacz;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.content.res.ColorStateList;
+import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,16 +16,24 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    public String data;
     private TextView mtvLogo;
     private EditText metCash;
     private EditText metPersons;
     private TextView mtvZiomek;
     private TextView mtvCashBack;
     private Button mbtCheck;
+    private Button mbtHistory;
 
-    private String cas;
-    private String per;
+    private String cash;
+    private String persons;
     private double sum;
+    private String sumStr;
+
+    public String getData() {
+        return data;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,18 +46,19 @@ public class MainActivity extends AppCompatActivity {
         mtvZiomek = findViewById(R.id.tvZiomek);
         mtvCashBack = findViewById(R.id.tvCashBack);
         mbtCheck = findViewById(R.id.btCheck);
+        mbtHistory = findViewById(R.id.btHistory);
 
         mbtCheck.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
 
-                cas = metCash.getText().toString().trim();
-                per = metPersons.getText().toString().trim();
+                cash = metCash.getText().toString().trim();
+                persons = metPersons.getText().toString().trim();
 
-                if (cas.isEmpty()) {
+                if (cash.isEmpty()) {
                     Toast.makeText(MainActivity.this, "Podaj ile kasy wydałeś", Toast.LENGTH_LONG).show();
-                } else if (per.isEmpty()) {
+                } else if (persons.isEmpty()) {
                     Toast.makeText(MainActivity.this, "Podaj ile osób się składa", Toast.LENGTH_LONG).show();
                 } else {
 
@@ -61,11 +66,12 @@ public class MainActivity extends AppCompatActivity {
 
                         mtvZiomek.setText("Każdy ziomek musi Ci oddać po: ");
 
-                        sum = Double.parseDouble(cas) / Double.parseDouble(per);
-                        String sumStr = String.format(Locale.ENGLISH, "%,.2f", sum);
+                        sum = Double.parseDouble(cash) / Double.parseDouble(persons);
+                        sumStr = String.format(Locale.ENGLISH, "%,.2f", sum);
 
                         mtvCashBack.setText(sumStr + " PLN");
 
+                       data = (cash + " PLN / " + persons + " os. = " + sumStr + "PLN");
 
                     } catch (Resources.NotFoundException e) {
                         e.printStackTrace();
@@ -74,5 +80,21 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mbtHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getBaseContext(), ListActivity.class);
+                intent.putExtra("cash", cash);
+                intent.putExtra("persons", persons);
+                intent.putExtra("sum", sumStr);
+                startActivityForResult(intent, 1);
+            }
+        });
+
+
     }
+
+
 }
